@@ -1,7 +1,9 @@
 //模拟RESTFUL
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://127.0.0.1:27017';
-
+const postArticle = require('./post-article');
+const getArticleList = require('./get-article-list');
+const getArticle = require('./get-article');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -23,84 +25,13 @@ app.all('*', function (req, res, next) {
   // res.header('Content-Type', 'application/x-www-form-urlencoded');
   next();
 });
-app.get('/getArcticlesByType', function (req, response) {
-  console.log(req.query);
-  const [pageSize, pageIndex, type] = [req.query.pageSize, req.query.pageIndex, req.query.type];
-  console.log('limit:' + pageSize);
-  console.log('序号范围:' + Number(pageSize) * (Number(pageIndex) - 1) + 1 + '-' + Number(pageSize) * Number(pageIndex));
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    console.log('数据库已经建立');
-    var dbo = db.db('blog');
-    // 查询 + 筛选
-    var condition;
-    if (type === 'all') {
-      condition = {};
-    } else {
-      condition = {
-        type: type
-      }
-    }
+//获取列表
+app.get('/getArcticlesByType', getArticleList);
+// 提交发表
+app.post('/blog', postArticle);
+//获取文章
+app.get('/getArticle', getArticle)
 
-    dbo.collection('myBlog').find(condition).sort({
-        date: -1
-      }).skip(Number(pageSize) * (Number(pageIndex) - 1))
-      .limit(Number(pageSize)).toArray(function (err, res) {
-        console.log('查询结果：');
-        if (err) throw err;
-        if (res) {
-          response.json({
-            result: 'success',
-            code: '1',
-            msg: '获取列表成功！',
-            data: res
-          });
-        }
-      });
-    db.close();
-  })
-
-});
-app.post('/blog', function (req, response) {
-  console.log(req.body.params);
-  var params = req.body.params;
-  // 链接数据库
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    console.log('数据库已经建立');
-    var dbo = db.db('blog');
-    // 查询是否文章名重复
-    dbo.collection('myBlog').find({
-      "arc_title": params.arc_title
-    }).toArray(function (err, res) {
-      console.log('查询结果：');
-      console.log(res);
-      if (res.length > 0) {
-        response.json({
-          result: 'success',
-          code: '0',
-          msg: '文章标题重复！',
-          data: {}
-        });
-      } else {
-        dbo.collection('myBlog').insertOne({ ...params,
-          date: new Date().getTime(),
-          postDate: new Date().toLocaleDateString(),
-          views:0
-        }, function (err, res) {
-          if (err) throw err;
-          response.json({
-            result: 'success',
-            code: '1',
-            msg: '发表成功！',
-            data: {}
-          });
-          db.close();
-        });
-      }
-    });
-  })
-})
 
 var server = app.listen(8081, function () {
 
