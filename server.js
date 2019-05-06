@@ -1,9 +1,10 @@
 //模拟RESTFUL
-const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://127.0.0.1:27017';
+// const MongoClient = require('mongodb').MongoClient;
+// const url = 'mongodb://127.0.0.1:27017';
 const postArticle = require('./post-article');
 const getArticleList = require('./get-article-list');
 const getArticle = require('./get-article');
+const authLogin = require('./login');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -25,6 +26,7 @@ app.all('*', function (req, res, next) {
   // res.header('Content-Type', 'application/x-www-form-urlencoded');
   next();
 });
+app.post('/login',authLogin);
 //获取列表
 app.get('/getArcticlesByType', getArticleList);
 // 提交发表

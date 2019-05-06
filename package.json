@@ -4,7 +4,8 @@
   "description": "express-mangodb",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "start": "node server.js"
   },
   "keywords": [
     "express",
@@ -14,7 +15,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
-    "mongodb": "^3.1.12"
+    "mongodb": "^3.1.12",
+    "multer": "^1.4.1"
   }
 }
