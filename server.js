@@ -6,6 +6,7 @@ const getArticleList = require('./get-article-list');
 const getArticle = require('./get-article');
 const authLogin = require('./login');
 var express = require('express');
+var regist = require('./registe');
 var bodyParser = require('body-parser');
 var app = express();
 // parse application/x-www-form-urlencoded  
@@ -17,7 +18,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json())
 
 app.all('*', function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
   //Access-Control-Allow-Headers ,可根据浏览器的F12查看,把对应的粘贴在这里就行
   res.header('Access-Control-Allow-Headers', '*');
   res.header('Access-Control-Allow-Methods', '*');
@@ -26,6 +27,7 @@ app.all('*', function (req, res, next) {
   // res.header('Content-Type', 'application/x-www-form-urlencoded');
   next();
 });
+app.post('/regist',regist);
 app.post('/login',authLogin);
 //获取列表
 app.get('/getArcticlesByType', getArticleList);

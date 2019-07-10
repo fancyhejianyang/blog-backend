@@ -1,14 +1,13 @@
 const dbConfig = require('./mongodb.config').DbConfig;
 const mode = require('./mongodb.config').mode;
 const MongoClient = require('mongodb').MongoClient;
+const auth = require('./auth');
 const getArticleList = function (req, response) {
   console.log(req.query);
   const [pageSize, pageIndex, type] = [req.query.pageSize, req.query.pageIndex, req.query.type];
   console.log('limit:' + pageSize);
   console.log('序号范围:' + Number(pageSize) * (Number(pageIndex) - 1) + 1 + '-' + Number(pageSize) * Number(pageIndex));
-  MongoClient.connect(dbConfig[mode]['url'], {
-    useNewUrlParser: true
-  }, function (err, db) {
+  auth((err,db)=>{
     if (err) throw err;
     console.log('数据库已经建立');
     var dbo = db.db('blog');
@@ -37,6 +36,6 @@ const getArticleList = function (req, response) {
         }
       });
     db.close();
-  })
+  });
 }
 module.exports = getArticleList;

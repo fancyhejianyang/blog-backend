@@ -7,7 +7,13 @@ const DbConfig = {
     url: ''
   }
 };
+const AdminInfo = {
+  user:'fancy',
+  password:'fancy',
+  dbName:'blog'
+}
 module.exports = {
   mode,
-  DbConfig
+  DbConfig,
+  AdminInfo
 };

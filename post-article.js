@@ -1,13 +1,8 @@
-const dbConfig = require('./mongodb.config').DbConfig;
-const mode = require('./mongodb.config').mode;
-const MongoClient = require('mongodb').MongoClient;
+const auth = require('./auth');
 const postArticle = function (req, response) {
   //获取请求参数
   var params = req.body.params;
-  //连接数据库
-  MongoClient.connect(dbConfig[mode]['url'], {
-    useNewUrlParser: true
-  }, function (err, db) {
+  auth((err, res) => {
     if (err) throw err;
     var dbo = db.db('blog');
     // 查询是否重复文章
@@ -36,6 +31,6 @@ const postArticle = function (req, response) {
           db.close();
         })
       })
-  })
+  });
 }
 module.exports = postArticle;
