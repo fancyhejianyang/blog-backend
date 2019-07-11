@@ -1,4 +1,5 @@
 const auth = require('./auth');
+const lib = require('./lib');
 const regist = function (req, response) {
   //获取请求参数
   var params = req.body.params;
@@ -16,8 +17,11 @@ const regist = function (req, response) {
       if (err) throw err;
       console.log(res.length === 0);
       if (res && res.length === 0) {
+        var uid = lib.produceUid(userInfo.nickName);
+        // console.log(uid);
         dbo.collection('users').insertOne({
           ...userInfo,
+          uid: uid,
           registrationDate: new Date(),
           city: params.city,
           ip: params.ip
@@ -41,7 +45,7 @@ const regist = function (req, response) {
         });
       }
     });
-    db.close();
+    // db.close();
   });
 };
 module.exports = regist;

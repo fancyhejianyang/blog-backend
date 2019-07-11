@@ -1,6 +1,4 @@
-const dbConfig = require('./mongodb.config').DbConfig;
-const mode = require('./mongodb.config').mode;
-const MongoClient = require('mongodb').MongoClient;
+const lib = require('./lib');
 const auth = require('./auth');
 const authLogin = function (req, response) {
   //获取请求参数
@@ -17,11 +15,14 @@ const authLogin = function (req, response) {
       .toArray(function (err, res) {
         if (err) throw err;
         if (res && res.length === 1) {
+          var token = lib.produceJwt({
+            nickName:userInfo.nickName
+          });
           response.json({
             result: 'success',
             code: '1',
             loginInfo: {
-              'm_session_id': 'asdfgad',
+              'm_session_id': token,
               'userName': userInfo.nickName
             },
             data: {
@@ -38,7 +39,6 @@ const authLogin = function (req, response) {
           })
         }
       })
-    db.close();
   })
 };
 module.exports = authLogin;
