@@ -8,8 +8,8 @@ const postArticle = function (req, response) {
     var dbo = db.db('blog');
     var token = JSON.parse(req.headers.authorization).value;
     var rst = lib.verifyJwt(token);
+    console.log(token);
     if (rst) {
-      console.log(rst);
       // 查询是否重复文章
       var arc_id;
       dbo.collection('myBlog').find()
@@ -27,25 +27,19 @@ const postArticle = function (req, response) {
             views: 0
           }, function (err, res) {
             if (err) throw err;
+            console.log('no err');
             response.json({
               result: 'success',
               code: '1',
               msg: '发表成功！',
               data: {}
             });
-            db.close();
+            // db.close();
           })
         })
     } else {
-      response.redirect('/login');
-      response.status(401).json({
-        result: 'failed',
-        code: '0',
-        status: 401,
-        data: {
-          msg: '账号登录过期，请重登！'
-        }
-      })
+      console.log('需要重登');
+      response.status(401);
     }
   });
 }
