@@ -10,13 +10,13 @@ var produceJwt = function (playload) {
   return jwt.sign(playload, secret, { expiresIn: '3h' })
 }
 var verifyJwt = function (token) {
+  var rst;
   jwt.verify(token, secret, function (err, result) {
-    if (err) {
-      return err;
-    } else {
-      return result;
-    }
+    console.log('secret',secret);
+    console.log(result);
+    rst = result;
   });
+  return rst;
 }
 module.exports = {
   produceUid: produceUid,

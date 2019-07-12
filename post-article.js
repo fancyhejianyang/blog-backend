@@ -8,8 +8,8 @@ const postArticle = function (req, response) {
     var dbo = db.db('blog');
     var token = JSON.parse(req.headers.authorization).value;
     var rst = lib.verifyJwt(token);
-    console.log(token);
     if (rst) {
+      // dbo.collection('users')
       // 查询是否重复文章
       var arc_id;
       dbo.collection('myBlog').find()
